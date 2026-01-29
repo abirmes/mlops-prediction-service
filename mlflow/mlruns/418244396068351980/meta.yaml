@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/418244396068351980
+creation_time: 1769607932419
+experiment_id: '418244396068351980'
+last_update_time: 1769607932419
+lifecycle_stage: active
+name: diabetes_prediction_experiment
