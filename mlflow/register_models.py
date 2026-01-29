@@ -47,9 +47,12 @@ def cap_outliers(df, col, factor_upper=2, factor_lower=1.5):
     df[col] = np.where(df[col]<lower, lower, df[col])
     return df
 
+
 for col in ['Pregnancies','BloodPressure','SkinThickness','Insulin','DiabetesPedigreeFunction']:
     data = cap_outliers(data, col)
-
+folder = "app/cleaned_data"
+os.makedirs(folder, exist_ok=True)
+data.to_csv(f"{folder}/data.csv", index=False)
 # Standardisation
 scaler = StandardScaler()
 scaled_data = pd.DataFrame(scaler.fit_transform(data), columns=data.columns)
