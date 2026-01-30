@@ -45,11 +45,11 @@ jobs:
         id: validate
         run: |
           RESULT=$(python -c "
-          from validate_data import validate_data_quality
+          from app.validation.validate import validate_Data
           import pandas as pd
           
           data = pd.read_csv('app/cleaned_data/data.csv')
-          total = validate_data_quality(data)
+          total = validate_Data(data)
           ")
           echo "total=$RESULT" >> $GITHUB_OUTPUT
       
