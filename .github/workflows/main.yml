@@ -1,58 +1,55 @@
+---
 on:
   push:
     branches:
-      - main 
-      - dev 
+      - main
+      - dev
       - feature/**
 
 jobs:
   job_1:
-    name: repo cloning  
+    name: repo cloning
     runs-on: ubuntu-latest
     steps:
       - name: cloning the repo locally
         uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install pandas numpy scikit-learn
 
   job_2:
-    name: validate data 
+    name: validate data
     needs: job_1
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install pandas numpy scikit-learn
-      
+
       - name: Run validation and store result
         id: validate
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: |
-          RESULT=$(python -c "
-          from app.validation.validate import validate_Data
-          import pandas as pd
-          
-          data = pd.read_csv('app/cleaned_data/data.csv')
-          total = validate_Data(data)
-          ")
+          RESULT=$(python -c " from app.validation.validate import validate_Data; import pandas as pd;data = pd.read_csv('app/cleaned_data/data.csv');total = validate_Data(data); print(total)")
           echo "total=$RESULT" >> $GITHUB_OUTPUT
-      
-      - name: validate the past step 
+
+      - name: validate the past step
         if: steps.validate.outputs.total > 0
         run: exit 1

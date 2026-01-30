@@ -33,7 +33,7 @@ def  validate_Data_types(data) :
                 return 1 
     else : return 0 
 def age_validation(data) :
-    if not data['age'].between(0, 120).all():
+    if not data['age'].between(18, 75).all():
         return 1 
     return 0 
 

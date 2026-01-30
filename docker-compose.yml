@@ -64,7 +64,22 @@ services:
     networks:
       - mlops
     restart: unless-stopped
-
+  data-validator:
+    image: python:3.9-slim
+    container_name: data-validator
+    volumes:
+      - ./app:/app
+    working_dir: /app
+    command: >
+      bash -c "pip install pandas numpy scikit-learn &&
+               python -c '
+               from validation.validate import validate_Data
+               import pandas as pd
+               data = pd.read_csv(\"cleaned_data/data.csv\")
+               total = validate_Data(data)
+               exit(0 if total == 0 else 1)
+               '"
+    
 networks:
   mlops:
     driver: bridge
