@@ -1,0 +1,70 @@
+services:
+  mlflow:
+    image: python:3.9-slim
+    container_name: mlflow
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlflow:/mlflow
+    working_dir: /mlflow
+    command: >
+      bash -c "apt-get update &&  
+               pip install mlflow scikit-learn && 
+               mlflow server --host 0.0.0.0 --port 5000 
+               --backend-store-uri sqlite:///mlflow.db
+               --default-artifact-root /mlflow/mlruns"
+    networks:
+      - mlops
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 240s
+
+
+  api:
+    build: .
+    container_name: api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/app/api
+      - ./mlflow:/app/mlflow
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - MODEL_NAME=MonModele
+      - MODEL_STAGE=Production
+    depends_on:
+      mlflow: 
+        condition: service_healthy
+    networks:
+      - mlops
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - mlops
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - mlops
+    restart: unless-stopped
+
+networks:
+  mlops:
+    driver: bridge
