@@ -22,23 +22,39 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pandas numpy scikit-learn
-  job_2 :
-    name : validate data 
-    needs : job_1
-    runs-on : ubuntu-latest
-    steps : 
-      id: validate
-      run: |
+
+  job_2:
+    name: validate data 
+    needs: job_1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas numpy scikit-learn
+      
+      - name: Run validation and store result
+        id: validate
+        run: |
           RESULT=$(python -c "
           from validate_data import validate_data_quality
           import pandas as pd
           
           data = pd.read_csv('app/cleaned_data/data.csv')
-          total = validate_data_quality(data)
+          is_valid, report = validate_data_quality(data)
+          error_count = len(report['errors'])
+          print(error_count)
           ")
-      name : validate the past step 
-      if: ${{ steps.validate.outputs.total > 1 }}
-      run : exit 1 
-
-
-  
+          echo "total=$RESULT" >> $GITHUB_OUTPUT
+      
+      - name: validate the past step 
+        if: steps.validate.outputs.total > 0
+        run: exit 1

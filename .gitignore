@@ -1,0 +1,12 @@
+# Python virtual environments
+env/
+.venv/
+mlflow/.venv/
+
+# MLflow artifacts & runs
+mlflow/mlartifacts/
+mlruns/
+
+# (optional but recommended)
+__pycache__/
+*.pyc
