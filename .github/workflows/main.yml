@@ -47,7 +47,7 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}
         run: |
-          RESULT=$(python -c "from api.validate import validate_Data; import pandas as pd;total = validate_Data(); print(total)")
+          RESULT=$(python -c "from api.validate import validate_Data;total = validate_Data(); print(total)")
           echo "total=$RESULT" >> $GITHUB_OUTPUT
 
       - name: validate the past step
