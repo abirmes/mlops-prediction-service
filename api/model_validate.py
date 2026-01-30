@@ -10,6 +10,7 @@ THRESHOLDS = {
 def validate_model_metrics(model_name: str = MODEL_NAME, thresholds: dict = THRESHOLDS):
     client = MlflowClient(MLFLOW_URI)
     latest_versions = client.get_latest_versions(model_name, stages=["Production"])
+    print(latest_versions)
     
     if not latest_versions:
         raise ValueError(f"No Production version found for model '{model_name}'")
