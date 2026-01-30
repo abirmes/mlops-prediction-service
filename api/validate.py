@@ -17,7 +17,7 @@ def validate_data_types(df: pd.DataFrame) -> int:
         "Insulin": np.floating,
         "BMI": np.floating,
         "DiabetesPedigreeFunction": np.floating,
-        "Age": int,
+        "Age": np.floating,
     }
 
     for col, expected_type in EXPECTED_SCHEMA.items():
