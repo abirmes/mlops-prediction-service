@@ -56,12 +56,11 @@ data['Glucose_Insulin'] = data['Glucose'] * data['Insulin']
 
 # **SAVE THE CLEANED DATA HERE**
 folder = "/app/cleaned_data"
+X = data.drop('Outcome', axis=1)
+y = data['Outcome']
 os.makedirs(folder, exist_ok=True)
 data.to_csv(f"{folder}/data.csv", index=False)
 print(f"Cleaned data saved to {folder}/data.csv")
-
-X = data.drop('Outcome', axis=1)
-y = data['Outcome']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 

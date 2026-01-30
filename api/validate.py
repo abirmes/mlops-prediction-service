@@ -1,9 +1,9 @@
 from pandas import pd
 
 data = pd.read_csv("" \
-"app/mlflow/cleaned_data/data.csv")
+"app/mlflow/cleaned_data.csv")
 null = data.isna().sum()
-def validate_Data(data) :
+def validate_Data() :
     total = 0 
     total += validate_Data( data.isna().sum())
     duplates += validate_Data(data.duplicated().sum())
