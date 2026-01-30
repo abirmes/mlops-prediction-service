@@ -1,7 +1,8 @@
 import pandas as pd 
 
-data = pd.read_csv("" \
-"app/mlflow/cleaned_data.csv")
+data = pd.read_csv(
+    "/app/mlflow/data/cleaned_data/data.csv"
+).drop("Unnamed: 0", axis=1)
 null = data.isna().sum()
 def validate_Data() :
     total = 0 
@@ -36,6 +37,6 @@ def age_validation(data) :
     if not data['age'].between(18, 75).all():
         return 1 
     return 0 
-
-
+if  __name__ == "__main__" :
+    validate_Data()
 

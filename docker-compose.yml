@@ -64,12 +64,6 @@ services:
     networks:
       - mlops
     restart: unless-stopped
-  data-validator:
-    image: python:3.9-slim
-    container_name: data-validator
-    volumes:
-      - ./validation:/app/validation
-    working_dir: /app
     
 networks:
   mlops:

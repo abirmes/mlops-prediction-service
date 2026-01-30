@@ -39,7 +39,7 @@ data['BMI_Age'] = data['BMI'] * data['Age']
 data['Glucose_Insulin'] = data['Glucose'] * data['Insulin']
 
 # **SAVE THE CLEANED DATA HERE**
-folder = "/app/cleaned_data"
+folder = "/mlflow/data/cleaned_data"
 os.makedirs(folder, exist_ok=True)
 data.to_csv(f"{folder}/data.csv", index=False)
 print(f"Cleaned data saved to {folder}/data.csv")
