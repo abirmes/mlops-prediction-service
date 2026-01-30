@@ -49,9 +49,7 @@ jobs:
           import pandas as pd
           
           data = pd.read_csv('app/cleaned_data/data.csv')
-          is_valid, report = validate_data_quality(data)
-          error_count = len(report['errors'])
-          print(error_count)
+          total = validate_data_quality(data)
           ")
           echo "total=$RESULT" >> $GITHUB_OUTPUT
       
