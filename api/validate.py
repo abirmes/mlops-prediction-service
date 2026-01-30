@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-data = pd.read_csv("./mlflow/data/cleaned_data/data.csv")
+df = pd.read_csv("./mlflow/data/cleaned_data/data.csv")
 
 
 def validate_value(count: int) -> int:
@@ -34,7 +34,7 @@ def age_validation(df: pd.DataFrame) -> int:
     return 0
 
 
-def validate_data(df: pd.DataFrame) -> int:
+def validate_data() -> int:
     total = 0
 
     # Null values
