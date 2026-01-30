@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-data = pd.read_csv("/app/mlflow/data/cleaned_data/data.csv")
+data = pd.read_csv("./mlflow/data/cleaned_data/data.csv")
 
 
 def validate_value(count: int) -> int:
