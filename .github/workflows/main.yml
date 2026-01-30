@@ -84,7 +84,7 @@ jobs:
           PYTHONPATH: ${{github.workspace}}
           CI : true
         run : |
-          RESULT=$(python -c "from api.model_validate  import validate_model_metrics;result = str(validate_model_metrics()).lower();")
+          RESULT=$(python -c "from api.model_validate  import validate_model_metrics;result = validate_model_metrics();")
           echo "result=$RESULT" >> $GITHUB_OUTPUT
       - name : check model performance 
         if : steps.model_validate.outputs.result == false
