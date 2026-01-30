@@ -58,26 +58,27 @@ jobs:
     needs : job_2
     runs-on : ubuntu-latest
     steps :
-      -name : Checkout code
-      uses : actions/checkout@v4
-      -name : Set up Python
-      uses : actions/setup-python@v4
-      with :
+      
+      - name : Checkout code
+        uses : actions/checkout@v4
+      - name : Set up Python
+        uses : actions/setup-python@v4
+        with :
           python-version : '3.9'
-      -name: Install dependencies
-      run : |   
+      - name: Install dependencies
+        run : |   
           python -m pip install --upgrade pip
           pip install pandas numpy scikit-learn mlflow
-      -name : Run model performance validation
-      id : model_validate
-      env : 
+      - name : Run model performance validation
+        id : model_validate
+        env : 
           PYTHONPATH: ${{github.workspace}}
-      run : |
+        run : |
           RESULT=$(python -c "from api.model_validate  import validate_model_metrics;result = validate_model_metrics();"
           echo "result=$RESULT" >> $GITHUB_OUTPUT
-      -name : check model performance 
-      if : steps.model_validate.result == True
-      run : exit 0 
+      - name : check model performance 
+        if : steps.model_validate.result == True
+        run : exit 0 
 
 
 
