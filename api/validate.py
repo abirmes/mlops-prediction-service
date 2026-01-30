@@ -53,4 +53,4 @@ def validate_data() -> int:
 
 
 if __name__ == "__main__":
-    print("Data quality score:", validate_data(data))
+    print("Data quality score:", validate_data())
