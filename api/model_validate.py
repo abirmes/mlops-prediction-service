@@ -21,7 +21,7 @@ def validate_model_metrics(model_name: str = MODEL_NAME, thresholds: dict = THRE
 
     for metric_name, threshold in thresholds.items():
         value = metrics.get(metric_name)
-        if value is None or value < threshold:
+        if value is None or value < threshold :
             print(f"Metric '{metric_name}' failed: value={value}, threshold={threshold}")
             passed = False
     
