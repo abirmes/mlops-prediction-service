@@ -1,0 +1,96 @@
+---
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - feature/**
+
+jobs:
+  job_1:
+    name: repo cloning
+    runs-on: ubuntu-latest
+    steps:
+      - name: cloning the repo locally
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas numpy scikit-learn
+
+  job_2:
+    name: validate data
+    needs: job_1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas numpy scikit-learn
+
+      - name: Run validation and store result
+        id: validate
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+          RESULT=$(python -c "from api.validate import validate_data;total = validate_data(); print(total)")
+          echo "total=$RESULT" >> $GITHUB_OUTPUT
+
+      - name: validate the past step
+        if: ${{ steps.validate.outputs.total > 0 }}
+        run: exit 1
+        
+  job_3:
+    name: validate model performance
+    needs: job_2
+    runs-on: ubuntu-latest
+    steps:
+      
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install dependencies
+        run: |   
+          python -m pip install --upgrade pip
+          pip install pandas numpy scikit-learn mlflow
+          
+      - name: Start MLflow Server
+        run: |
+          mlflow server \
+            --host 127.0.0.1 \
+            --port 5000 \
+            --backend-store-uri sqlite:///mlflow.db \
+            --default-artifact-root ./mlruns &
+          sleep 5  # Wait for server to start
+
+      - name: Run model performance validation
+        id: model_validate
+        env: 
+          PYTHONPATH: ${{ github.workspace }}
+          CI: true
+        run: |
+          RESULT=$(python -c "from api.model_validate import validate_model_metrics; metrics, passed = validate_model_metrics(); print(str(passed).lower())")
+          echo "result=$RESULT" >> $GITHUB_OUTPUT
+          
+      - name: check model performance 
+        if: ${{ steps.model_validate.outputs.result == 'false' }}
+        run: exit 1

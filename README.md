@@ -82,7 +82,32 @@ curl http://localhost:8000/metrics
 2. Login: admin/admin
 3. Voir le dashboard "MLOps Monitoring"
 
+## 🧪 Tests
+```bash
+# Lancer les tests
+pytest api/tests/ -v
 
+# Avec coverage
+pytest api/tests/ --cov=api --cov-report=html
+```
+
+## 🛠️ Commandes Utiles
+```bash
+# Démarrer
+make up
+
+# Arrêter
+make down
+
+# Voir les logs
+make logs
+
+# Redémarrer
+make restart
+
+# Tests
+make test
+```
 
 ## 📊 Métriques Exposées
 
