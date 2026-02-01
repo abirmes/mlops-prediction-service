@@ -35,20 +35,29 @@ def load_model():
         model = None
 
 class PredictionInput(BaseModel):
-    feature1: float
-    feature2: float
-    feature3: float
-    feature4: float
+    Pregnancies: float
+    Glucose: float
+    BloodPressure: float
+    SkinThickness: float
+    Insulin: float
+    BMI: float
+    DiabetesPedigreeFunction: float
+    Age: float
 
     class Config:
         schema_extra = {
             "example": {
-                "feature1": 5.1,
-                "feature2": 3.5,
-                "feature3": 1.4,
-                "feature4": 0.2
+                "Pregnancies": 2,
+                "Glucose": 130,
+                "BloodPressure": 70,
+                "SkinThickness": 20,
+                "Insulin": 85,
+                "BMI": 32.5,
+                "DiabetesPedigreeFunction": 0.45,
+                "Age": 41
             }
         }
+
 
 class PredictionOutput(BaseModel):
     prediction: float
