@@ -1,4 +1,7 @@
+version: "3.9"
+
 services:
+
   mlflow:
     image: python:3.9-slim
     container_name: mlflow
@@ -8,9 +11,9 @@ services:
       - ./mlflow:/mlflow
     working_dir: /mlflow
     command: >
-      bash -c "apt-get update &&  
-               pip install mlflow scikit-learn && 
-               mlflow server --host 0.0.0.0 --port 5000 
+      bash -c "apt-get update &&
+               pip install mlflow scikit-learn &&
+               mlflow server --host 0.0.0.0 --port 5000
                --backend-store-uri sqlite:///mlflow.db
                --default-artifact-root /mlflow/mlruns"
     networks:
@@ -21,7 +24,6 @@ services:
       timeout: 5s
       retries: 5
       start_period: 240s
-
 
   api:
     build: .
@@ -36,7 +38,7 @@ services:
       - MODEL_NAME=MonModele
       - MODEL_STAGE=Production
     depends_on:
-      mlflow: 
+      mlflow:
         condition: service_healthy
     networks:
       - mlops
@@ -49,6 +51,7 @@ services:
       - "9090:9090"
     volumes:
       - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
     networks:
       - mlops
     restart: unless-stopped
@@ -58,13 +61,24 @@ services:
     container_name: grafana
     ports:
       - "3001:3000"
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+      - grafana-data:/var/lib/grafana
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - prometheus
     networks:
       - mlops
     restart: unless-stopped
-    
+
+volumes:
+  prometheus-data:
+  grafana-data:
+
 networks:
   mlops:
     driver: bridge

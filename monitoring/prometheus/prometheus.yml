@@ -1,10 +1,20 @@
 global:
-  scrape_interval: 5s
+  scrape_interval: 10s     
+  evaluation_interval: 10s
+  external_labels:
+    cluster: 'mlops-dev'
+    project: 'diabetes-prediction'
 
 scrape_configs:
-  - job_name: 'api'
+  - job_name: 'mlops-api'
+    scrape_interval: 5s      
+    metrics_path: '/metrics'
     static_configs:
       - targets: ['api:8000']
-  - job_name: 'docker'
+        labels:
+          service: 'diabetes-api'
+          environment: 'development'
+
+  - job_name: 'prometheus'
     static_configs:
-      - targets: ['api:8000', 'mlflow:5000']
+      - targets: ['localhost:9090']
