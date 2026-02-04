@@ -68,9 +68,10 @@ class PredictionInput(BaseModel):
                     "Insulin": 0,
                     "BMI": 33.6,
                     "DiabetesPedigreeFunction": 0.627,
-                    "Age": 50
+                    "Age": 50,
                 }
             }
+            
 
 class PredictionOutput(BaseModel):
     prediction: float
