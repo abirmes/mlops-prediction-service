@@ -157,13 +157,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name : Build and Push image
         run  : | 
-              docker build -f docker/Dockerfile -t bouchta65/diabetestrackai-mlops:latest .
-              docker push bouchta65/diabetestrackai-mlops:latest
-
-
-
-      
-
-
-      
-      
+                docker build -t younesskamal01/diabetestrackai-mlops:${{ github.sha }} .
+                docker push younesskamal01/diabetestrackai-mlops:${{ github.sha }}
+                docker tag younesskamal01/diabetestrackai-mlops:${{ github.sha }} younesskamal01/diabetestrackai-mlops:latest
+                docker push younesskamal01/diabetestrackai-mlops:latest
