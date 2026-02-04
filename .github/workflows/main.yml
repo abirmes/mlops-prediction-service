@@ -151,7 +151,6 @@ jobs:
     needs: job_5
     runs-on :  ubuntu-latest
     name : docker
-    if: github.event_name == 'push'
     steps : 
       - name : clone 
         uses : actions/checkout@v4
@@ -162,7 +161,6 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name : Build and Push image
         run  : | 
-                docker build -t younesskamal01/mlops-prediction-service:${{ github.sha }} .
-                docker push younesskamal01/mlops-prediction-service:${{ github.sha }}
-                docker tag younesskamal01/mlops-prediction-service:${{ github.sha }} younesskamal01/mlops-prediction-service:latest
+                docker build -t younesskamal01/mlops-prediction-service:latest .
                 docker push younesskamal01/mlops-prediction-service:latest
+  
