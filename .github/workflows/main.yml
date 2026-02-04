@@ -146,7 +146,7 @@ jobs:
                 pip install -r requirements.txt
         - run: |
             export PYTHONPATH=$PYTHONPATH:.
-        - run: echo "✅ All tests passed!"
+        - run: echo "All tests passed!"
   job_6 : 
     needs: job_5
     runs-on :  ubuntu-latest
