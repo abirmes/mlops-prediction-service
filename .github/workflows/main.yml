@@ -94,3 +94,30 @@ jobs:
       - name: check model performance 
         if: ${{ steps.model_validate.outputs.result == 'false' }}
         run: exit 1
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pylint flake8 black isort bandit mypy
+      
+      - name: Check code formatting with Black
+        run: black --check --diff .
+        continue-on-error: true
+      
+      - name: Check import sorting with isort
+        run: isort --check-only --diff .
+        continue-on-error: true
+      
+      - name: Lint with flake8
+        run: |
+          # Arrêter sur les erreurs de syntaxe ou noms non définis
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # Warnings sur la complexité
+          flake8 . --count --max-complexity=10 --max-line-length=127 --statistics
+        continue-on-error: true
+      
+      - name: Lint with pylint
+        run: |
+          pylint api/tests/*.py --fail-under=7.0 --max-line-length=127
+        continue-on-error: true
+      
